@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Web Highlighter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            width: 300px;
+            padding: 15px;
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            color: #e94560;
+            text-align: center;
+        }
+
+        .category-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .category-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .category-name {
+            flex-grow: 1;
+        }
+
+        .category-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        .stats {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .link-to-notes {
+            display: block;
+            margin-top: 15px;
+            padding: 8px;
+            background-color: #e94560;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .link-to-notes:hover {
+            background-color: #c73851;
+        }
+    </style>
+</head>
+<body>
+    <h1>Note Web Highlighter</h1>
+    
+    <div class="category-list">
+        <div class="category-item" data-category="shop-baskets">
+            <i class="fas fa-shopping-basket category-icon"></i>
+            <span class="category-name">Shop Baskets</span>
+            <div class="category-color" style="background-color: #FF6B6B"></div>
+        </div>
+        <div class="category-item" data-category="making-mask">
+            <i class="fas fa-mask category-icon"></i>
+            <span class="category-name">Making Mask</span>
+            <div class="category-color" style="background-color: #4ECDC4"></div>
+        </div>
+        <div class="category-item" data-category="informatica">
+            <i class="fas fa-laptop-code category-icon"></i>
+            <span class="category-name">Informatica</span>
+            <div class="category-color" style="background-color: #45B7D1"></div>
+        </div>
+        <div class="category-item" data-category="gaming">
+            <i class="fas fa-gamepad category-icon"></i>
+            <span class="category-name">Gaming</span>
+            <div class="category-color" style="background-color: #96CEB4"></div>
+        </div>
+        <div class="category-item" data-category="disegno">
+            <i class="fas fa-paint-brush category-icon"></i>
+            <span class="category-name">Disegno</span>
+            <div class="category-color" style="background-color: #D4A5A5"></div>
+        </div>
+        <div class="category-item" data-category="produzione">
+            <i class="fas fa-music category-icon"></i>
+            <span class="category-name">Produzione</span>
+            <div class="category-color" style="background-color: #9B59B6"></div>
+        </div>
+        <div class="category-item" data-category="mixing">
+            <i class="fas fa-sliders-h category-icon"></i>
+            <span class="category-name">Mixing</span>
+            <div class="category-color" style="background-color: #3498DB"></div>
+        </div>
+        <div class="category-item" data-category="mastering">
+            <i class="fas fa-wave-square category-icon"></i>
+            <span class="category-name">Mastering</span>
+            <div class="category-color" style="background-color: #2ECC71"></div>
+        </div>
+        <div class="category-item" data-category="recording">
+            <i class="fas fa-microphone category-icon"></i>
+            <span class="category-name">Recording</span>
+            <div class="category-color" style="background-color: #E74C3C"></div>
+        </div>
+        <div class="category-item" data-category="samples">
+            <i class="fas fa-drum category-icon"></i>
+            <span class="category-name">Samples</span>
+            <div class="category-color" style="background-color: #F1C40F"></div>
+        </div>
+        <div class="category-item" data-category="midi">
+            <i class="fas fa-keyboard category-icon"></i>
+            <span class="category-name">MIDI</span>
+            <div class="category-color" style="background-color: #E67E22"></div>
+        </div>
+        <div class="category-item" data-category="sviluppo-programmi">
+            <i class="fas fa-code category-icon"></i>
+            <span class="category-name">Sviluppo Programmi</span>
+            <div class="category-color" style="background-color: #1ABC9C"></div>
+        </div>
+        <div class="category-item" data-category="altri-interessi">
+            <i class="fas fa-star category-icon"></i>
+            <span class="category-name">Altri Interessi</span>
+            <div class="category-color" style="background-color: #95A5A6"></div>
+        </div>
+        <div class="category-item" data-category="diy-how-to-make">
+            <i class="fas fa-tools category-icon"></i>
+            <span class="category-name">DIY/How to Make</span>
+            <div class="category-color" style="background-color: #D35400"></div>
+        </div>
+        <div class="category-item" data-category="coltivazione">
+            <i class="fas fa-seedling category-icon"></i>
+            <span class="category-name">Coltivazione</span>
+            <div class="category-color" style="background-color: #27AE60"></div>
+        </div>
+        <div class="category-item" data-category="bot-telegram">
+            <i class="fab fa-telegram category-icon"></i>
+            <span class="category-name">Bot Telegram</span>
+            <div class="category-color" style="background-color: #0088CC"></div>
+        </div>
+        <div class="category-item" data-category="vst-plugins">
+            <i class="fas fa-plug category-icon"></i>
+            <span class="category-name">VST Plugins</span>
+            <div class="category-color" style="background-color: #8E44AD"></div>
+        </div>
+        <div class="category-item" data-category="airbnb-project">
+            <i class="fas fa-home category-icon"></i>
+            <span class="category-name">Airbnb Project</span>
+            <div class="category-color" style="background-color: #FF5A5F"></div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div id="totalNotes">Note totali: 0</div>
+        <div id="todayNotes">Note oggi: 0</div>
+    </div>
+
+    <a href="notes.html" target="_blank" class="link-to-notes">
+        Apri le tue Note Web
+    </a>
+
+    <script src="popup.js"></script>
+</body>
+</html> 

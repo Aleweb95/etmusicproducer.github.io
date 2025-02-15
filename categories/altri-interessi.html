@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altri Interessi - Note Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../notes.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .subcategories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .subcategory-card {
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            clip-path: polygon(
+                20px 0%,
+                100% 0%,
+                100% 100%,
+                calc(100% - 20px) 100%,
+                20px 100%,
+                0% calc(100% - 20px),
+                0% 20px
+            );
+            background: rgba(20, 20, 25, 0.95);
+            border: 2px solid rgba(192, 192, 192, 0.3);
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            backdrop-filter: blur(5px);
+            text-decoration: none;
+            border-radius: 50px;
+        }
+
+        .subcategory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(192, 192, 192, 0.2), 
+                rgba(211, 211, 211, 0.1));
+            z-index: 1;
+        }
+
+        .subcategory-card h3 {
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            font-size: 1.8em;
+            text-shadow: 
+                0 0 5px rgba(192, 192, 192, 0.8),
+                0 0 10px rgba(192, 192, 192, 0.5),
+                0 0 15px rgba(192, 192, 192, 0.3);
+            animation: glitch 3s infinite alternate;
+            color: #ffffff;
+            margin: 0;
+            margin-bottom: 15px;
+        }
+
+        .subcategory-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1em;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 
+                    2px 2px 0px #C0C0C0,
+                    -2px -2px 0px #D3D3D3;
+            }
+            25% {
+                text-shadow: 
+                    -2px 2px 0px #C0C0C0,
+                    2px -2px 0px #D3D3D3;
+            }
+            50% {
+                text-shadow: 
+                    2px -2px 0px #C0C0C0,
+                    -2px 2px 0px #D3D3D3;
+            }
+            75% {
+                text-shadow: 
+                    -2px -2px 0px #C0C0C0,
+                    2px 2px 0px #D3D3D3;
+            }
+            100% {
+                text-shadow: 
+                    2px 2px 0px #C0C0C0,
+                    -2px -2px 0px #D3D3D3;
+            }
+        }
+
+        .subcategory-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            border-color: #C0C0C0;
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.4);
+        }
+
+        .subcategory-card:hover h3 {
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 3em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 
+                0 0 10px rgba(192, 192, 192, 0.8),
+                0 0 20px rgba(192, 192, 192, 0.5),
+                0 0 30px rgba(192, 192, 192, 0.3);
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+
+        .home-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(192, 192, 192, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: rgba(192, 192, 192, 0.3);
+            border-color: rgba(192, 192, 192, 0.5);
+            box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+        }
+
+        .notes-container {
+            margin-top: 30px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(192, 192, 192, 0.2);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: rgba(192, 192, 192, 0.3);
+            border-color: rgba(192, 192, 192, 0.5);
+            box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+        }
+
+        .note-card {
+            background: rgba(20, 20, 25, 0.95);
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .note-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(192, 192, 192, 0.2);
+        }
+
+        .note-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1em;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .note-url {
+            color: #C0C0C0;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .note-url:hover {
+            color: #D3D3D3;
+        }
+
+        .note-metadata {
+            font-family: 'Rajdhani', sans-serif;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9em;
+        }
+
+        .add-note-form {
+            background: rgba(20, 20, 25, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 2px solid rgba(192, 192, 192, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(192, 192, 192, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: rgba(192, 192, 192, 0.3);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: rgba(192, 192, 192, 0.5);
+            box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Altri Interessi</h1>
+            <div class="navigation-buttons">
+                <a href="../index.html" class="nav-button">Torna alla Home</a>
+                <a href="../notes.html" class="nav-button">Le Mie Note</a>
+                <a href="javascript:history.back()" class="nav-button">⬅️</a>
+            </div>
+        </header>
+
+        <div class="subcategories-grid">
+            <div class="subcategory-card">
+                <h3>Sport</h3>
+                <p>Allenamento, Nutrizione, Competizioni</p>
+            </div>
+            <div class="subcategory-card">
+                <h3>Lettura</h3>
+                <p>Libri, Articoli, Recensioni</p>
+            </div>
+            <div class="subcategory-card">
+                <h3>Viaggi</h3>
+                <p>Destinazioni, Itinerari, Consigli</p>
+            </div>
+            <div class="subcategory-card">
+                <h3>Cucina</h3>
+                <p>Ricette, Tecniche, Strumenti</p>
+            </div>
+            <div class="subcategory-card">
+                <h3>Fotografia</h3>
+                <p>Tecnica, Editing, Portfolio</p>
+            </div>
+            <div class="subcategory-card">
+                <h3>Hobby Creativi</h3>
+                <p>Progetti, Tutorial, Ispirazioni</p>
+            </div>
+        </div>
+
+        <div class="notes-container">
+            <div class="navigation-buttons">
+                <a href="../index.html" class="nav-button">Torna alla Home</a>
+                <a href="disegno.html" class="nav-button">Torna a Disegno</a>
+            </div>
+            <h2>Le Mie Note</h2>
+            <div id="notes-list">
+                <!-- Le note verranno inserite qui dinamicamente -->
+            </div>
+        </div>
+
+        <div class="add-note-form">
+            <h3>Aggiungi una Nota</h3>
+            <div class="form-group">
+                <textarea id="note-text" placeholder="Inserisci il testo della nota"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="text" id="note-url" placeholder="URL (opzionale)">
+            </div>
+            <button class="submit-btn" onclick="addNote('altri-interessi')">Aggiungi Nota</button>
+        </div>
+    </div>
+
+    <script src="../notes.js"></script>
+</body>
+</html> 

@@ -1,0 +1,66 @@
+---
+description: PULSANTI NAV
+globs: .json
+---
+{
+    "name": "Aggiungi Pulsanti di Navigazione",
+    "description": "Aggiunge automaticamente i pulsanti di navigazione standard in ogni nuova pagina",
+    "pattern": "**/*.html",
+    "on_file_create": {
+        "insert_after": "<header>",
+        "content": [
+            "            <div class=\"navigation-buttons\">",
+            "                <a href=\"../index.html\" class=\"nav-button\">Torna alla Home</a>",
+            "                <a href=\"javascript:history.back()\" class=\"nav-button\">⬅️</a>",
+            "                <a href=\"${parentCategory}.html\" class=\"nav-button\">Torna a ${parentCategoryName}</a>",
+            "            </div>"
+        ]
+    },
+    "styles": {
+        "insert_after": "<style>",
+        "content": [
+            "        .navigation-buttons {",
+            "            display: flex;",
+            "            gap: 15px;",
+            "            margin-bottom: 20px;",
+            "        }",
+            "",
+            "        .nav-button {",
+            "            display: inline-block;",
+            "            padding: 12px 25px;",
+            "            background: rgba(var(--theme-color-rgb), 0.2);",
+            "            color: #ffffff;",
+            "            text-decoration: none;",
+            "            border-radius: 8px;",
+            "            font-family: 'Orbitron', sans-serif;",
+            "            text-transform: uppercase;",
+            "            letter-spacing: 1px;",
+            "            border: 1px solid rgba(var(--theme-color-rgb), 0.3);",
+            "            transition: all 0.3s ease;",
+            "        }",
+            "",
+            "        .nav-button:hover {",
+            "            background: rgba(var(--theme-color-rgb), 0.3);",
+            "            border-color: rgba(var(--theme-color-rgb), 0.5);",
+            "            box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);",
+            "        }"
+        ]
+    },
+    "variables": {
+        "parentCategory": {
+            "type": "string",
+            "description": "Nome del file della categoria principale (es: produzione, informatica)",
+            "prompt": "Inserisci il nome del file della categoria principale (senza .html)"
+        },
+        "parentCategoryName": {
+            "type": "string",
+            "description": "Nome visualizzato della categoria principale",
+            "prompt": "Inserisci il nome visualizzato della categoria principale (es: Produzione Musicale)"
+        },
+        "theme-color-rgb": {
+            "type": "string",
+            "description": "Colore del tema in formato RGB (es: 128, 0, 128 per viola)",
+            "prompt": "Inserisci il colore del tema in formato RGB (es: 128, 0, 128)"
+        }
+    }
+}
