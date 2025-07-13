@@ -25,8 +25,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let uploadedAudios = [];
     let uploadedFiles = [];
 
+    // Funzione per validare URL
+    function isValidURL(string) {
+        try {
+            const url = new URL(string);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (_) {
+            return false;
+        }
+    }
+
     // Funzione per salvare una nuova nota
     function saveNote() {
+        // Validazione URL
+        if (urlInput.value && !isValidURL(urlInput.value)) {
+            alert('Inserisci un URL valido (deve iniziare con http:// o https://)');
+            return;
+        }
+        
         const note = {
             id: Date.now(),
             text: noteText.value,
@@ -51,6 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
         videoPreview.innerHTML = '';
         audioPreview.innerHTML = '';
         fileList.innerHTML = '';
+        
+        // Pulisci gli URL creati per evitare memory leak
+        createdObjectURLs.forEach(url => URL.revokeObjectURL(url));
+        createdObjectURLs = [];
+        
         uploadedImages = [];
         uploadedVideos = [];
         uploadedAudios = [];
@@ -103,10 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
             noteElement.className = 'note-card';
             noteElement.style.borderLeft = `5px solid ${note.color}`;
             
+            // Sanitizza il contenuto per prevenire XSS
+            const sanitizeHTML = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+            
             noteElement.innerHTML = `
-                <p class="note-text">${note.text}</p>
-                <a href="${note.url}" target="_blank" class="note-url">${note.url}</a>
-                <span class="note-category">${note.category}</span>
+                <p class="note-text">${sanitizeHTML(note.text)}</p>
+                <a href="${sanitizeHTML(note.url)}" target="_blank" class="note-url">${sanitizeHTML(note.url)}</a>
+                <span class="note-category">${sanitizeHTML(note.category)}</span>
                 <span class="note-date">${new Date(note.timestamp).toLocaleDateString()}</span>
                 <button class="delete-note" data-id="${note.id}">Elimina</button>
             `;
@@ -115,15 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Gestione dell'eliminazione delle note
-    document.addEventListener('click', (e) => {
+    // Gestione dell'eliminazione delle note con delegazione eventi
+    const handleDeleteNote = (e) => {
         if (e.target.classList.contains('delete-note')) {
             const noteId = parseInt(e.target.dataset.id);
             savedNotes = savedNotes.filter(note => note.id !== noteId);
             localStorage.setItem('webNotes', JSON.stringify(savedNotes));
             displayNotes(savedNotes);
         }
-    });
+    };
+    
+    // Usa un singolo event listener con delegazione eventi
+    document.addEventListener('click', handleDeleteNote);
+
+    // Funzione di cleanup per rimuovere event listener
+    const cleanup = () => {
+        document.removeEventListener('click', handleDeleteNote);
+        // Pulisci gli URL creati
+        createdObjectURLs.forEach(url => URL.revokeObjectURL(url));
+    };
 
     // Carica le note all'avvio
     displayNotes(savedNotes);
@@ -254,12 +292,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Array per tenere traccia degli URL creati per evitare memory leak
+    let createdObjectURLs = [];
+
     // Gestione caricamento video
     videoInput.addEventListener('change', (e) => {
         const files = Array.from(e.target.files);
         files.forEach(file => {
             if (file.type.startsWith('video/')) {
-                const preview = createVideoPreview(URL.createObjectURL(file), file.name);
+                const objectURL = URL.createObjectURL(file);
+                createdObjectURLs.push(objectURL);
+                const preview = createVideoPreview(objectURL, file.name);
                 videoPreview.appendChild(preview);
                 uploadedVideos.push(file);
             }
@@ -271,7 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const files = Array.from(e.target.files);
         files.forEach(file => {
             if (file.type.startsWith('audio/')) {
-                const preview = createAudioPreview(URL.createObjectURL(file), file.name);
+                const objectURL = URL.createObjectURL(file);
+                createdObjectURLs.push(objectURL);
+                const preview = createAudioPreview(objectURL, file.name);
                 audioPreview.appendChild(preview);
                 uploadedAudios.push(file);
             }
