@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
             timestamp: new Date().toISOString(),
             color: getSelectedColor(),
             images: uploadedImages.map(img => img.name),
-            videos: uploadedVideos.map(video => video.name),
-            audios: uploadedAudios.map(audio => audio.name),
+            videos: uploadedVideos.map(video => video.file.name),
+            audios: uploadedAudios.map(audio => audio.file.name),
             files: uploadedFiles.map(file => file.name)
         };
 
@@ -131,11 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return div.innerHTML;
             };
             
+            // Sanitizza tutti i valori per prevenire XSS
+            const sanitizedText = sanitizeHTML(note.text);
+            const sanitizedUrl = sanitizeHTML(note.url);
+            const sanitizedCategory = sanitizeHTML(note.category);
+            const sanitizedDate = new Date(note.timestamp).toLocaleDateString();
+            
             noteElement.innerHTML = `
-                <p class="note-text">${sanitizeHTML(note.text)}</p>
-                <a href="${sanitizeHTML(note.url)}" target="_blank" class="note-url">${sanitizeHTML(note.url)}</a>
-                <span class="note-category">${sanitizeHTML(note.category)}</span>
-                <span class="note-date">${new Date(note.timestamp).toLocaleDateString()}</span>
+                <p class="note-text">${sanitizedText}</p>
+                <a href="${sanitizedUrl}" target="_blank" class="note-url" rel="noopener noreferrer">${sanitizedUrl}</a>
+                <span class="note-category">${sanitizedCategory}</span>
+                <span class="note-date">${sanitizedDate}</span>
                 <button class="delete-note" data-id="${note.id}">Elimina</button>
             `;
             
@@ -304,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 createdObjectURLs.push(objectURL);
                 const preview = createVideoPreview(objectURL, file.name);
                 videoPreview.appendChild(preview);
-                uploadedVideos.push(file);
+                uploadedVideos.push({file: file, objectURL: objectURL});
             }
         });
     });
@@ -318,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 createdObjectURLs.push(objectURL);
                 const preview = createAudioPreview(objectURL, file.name);
                 audioPreview.appendChild(preview);
-                uploadedAudios.push(file);
+                uploadedAudios.push({file: file, objectURL: objectURL});
             }
         });
     });
@@ -360,8 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         div.querySelector('.remove-btn').addEventListener('click', () => {
             div.remove();
-            uploadedVideos = uploadedVideos.filter(video => video.name !== name);
-            URL.revokeObjectURL(src);
+            const videoToRemove = uploadedVideos.find(video => video.file.name === name);
+            if (videoToRemove) {
+                URL.revokeObjectURL(videoToRemove.objectURL);
+                createdObjectURLs = createdObjectURLs.filter(url => url !== videoToRemove.objectURL);
+            }
+            uploadedVideos = uploadedVideos.filter(video => video.file.name !== name);
         });
         
         return div;
@@ -379,8 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         div.querySelector('.remove-btn').addEventListener('click', () => {
             div.remove();
-            uploadedAudios = uploadedAudios.filter(audio => audio.name !== name);
-            URL.revokeObjectURL(src);
+            const audioToRemove = uploadedAudios.find(audio => audio.file.name === name);
+            if (audioToRemove) {
+                URL.revokeObjectURL(audioToRemove.objectURL);
+                createdObjectURLs = createdObjectURLs.filter(url => url !== audioToRemove.objectURL);
+            }
+            uploadedAudios = uploadedAudios.filter(audio => audio.file.name !== name);
         });
         
         return div;

@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Effetto parallasse sul gradiente
-    window.addEventListener('scroll', () => {
-        const gradient = document.querySelector('.rainbow-gradient');
-        const scrolled = window.pageYOffset;
-        gradient.style.transform = `rotate(-15deg) translateY(${scrolled * 0.5}px)`;
-    });
-
     // Animazione del testo all'ingresso
     const title = document.querySelector('.title');
     const description = document.querySelector('.description');
@@ -48,15 +41,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     
-    // Controlla le animazioni allo scroll
-    window.addEventListener('scroll', () => {
-        animateButtons();
-        
+    // Funzione per l'effetto parallasse
+    const handleScroll = () => {
         // Effetto parallasse sul gradiente
         const gradient = document.querySelector('.rainbow-gradient');
-        const scrolled = window.pageYOffset;
-        gradient.style.transform = `rotate(-15deg) translateY(${scrolled * 0.5}px)`;
-    });
+        if (gradient) {
+            const scrolled = window.pageYOffset;
+            gradient.style.transform = `rotate(-15deg) translateY(${scrolled * 0.5}px)`;
+        }
+        
+        // Controlla le animazioni dei pulsanti
+        animateButtons();
+    };
+    
+    // Aggiungi un singolo event listener per lo scroll
+    window.addEventListener('scroll', handleScroll);
     
     // Controlla le animazioni al caricamento
     animateButtons();
