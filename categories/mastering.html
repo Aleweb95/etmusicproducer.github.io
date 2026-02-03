@@ -355,6 +355,9 @@
             </div>
         </div>
 
+        <!-- Elemento usato dallo script per mostrare la categoria corrente (ora sempre presente) -->
+        <h2 id="currentCategory" style="display:none;"></h2>
+
         <button class="home-button back-button">Torna alle Categorie</button>
 
         <div class="add-note-form">
@@ -394,35 +397,44 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const subcategoryCards = document.querySelectorAll('.subcategory-card');
+            const subcategoryCards = document.querySelectorAll('.subcategory-card') || [];
             const notesContainer = document.querySelector('.notes-container');
             const addNoteForm = document.querySelector('.add-note-form');
             const backButton = document.querySelector('.back-button');
             const subcategoriesGrid = document.querySelector('.subcategories-grid');
             const noteForm = document.getElementById('noteForm');
             const notesDiv = document.getElementById('notes-list');
+            const currentCategoryEl = document.getElementById('currentCategory');
             let currentCategory = '';
+
+            // Imposta stato iniziale in modo robusto
+            if (subcategoriesGrid) subcategoriesGrid.style.display = 'grid';
+            if (notesContainer) notesContainer.style.display = 'none';
+            if (addNoteForm) addNoteForm.style.display = 'none';
+            if (backButton) backButton.style.display = 'none';
 
             // Gestione click sulle sottocategorie
             subcategoryCards.forEach(card => {
                 card.addEventListener('click', () => {
-                    currentCategory = card.dataset.category;
-                    document.getElementById('currentCategory').textContent = currentCategory;
-                    subcategoriesGrid.style.display = 'none';
-                    notesContainer.style.display = 'block';
-                    addNoteForm.style.display = 'block';
-                    backButton.style.display = 'inline-block';
+                    currentCategory = card.dataset.category || '';
+                    if (currentCategoryEl) currentCategoryEl.textContent = currentCategory;
+                    if (subcategoriesGrid) subcategoriesGrid.style.display = 'none';
+                    if (notesContainer) notesContainer.style.display = 'block';
+                    if (addNoteForm) addNoteForm.style.display = 'block';
+                    if (backButton) backButton.style.display = 'inline-block';
                     loadNotes(currentCategory);
                 });
             });
 
             // Torna alle categorie
-            backButton.addEventListener('click', () => {
-                subcategoriesGrid.style.display = 'grid';
-                notesContainer.style.display = 'none';
-                addNoteForm.style.display = 'none';
-                backButton.style.display = 'none';
-            });
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    if (subcategoriesGrid) subcategoriesGrid.style.display = 'grid';
+                    if (notesContainer) notesContainer.style.display = 'none';
+                    if (addNoteForm) addNoteForm.style.display = 'none';
+                    backButton.style.display = 'none';
+                });
+            }
 
             // Carica le note per la categoria selezionata
             function loadNotes(category) {
@@ -432,11 +444,13 @@
                     note.subcategory === category
                 );
                 
-                notesDiv.innerHTML = '';
-                categoryNotes.forEach(note => {
-                    const noteElement = createNoteElement(note);
-                    notesDiv.appendChild(noteElement);
-                });
+                if (notesDiv) {
+                    notesDiv.innerHTML = '';
+                    categoryNotes.forEach(note => {
+                        const noteElement = createNoteElement(note);
+                        notesDiv.appendChild(noteElement);
+                    });
+                }
             }
 
             // Crea elemento nota
@@ -463,34 +477,37 @@
                 div.appendChild(badge);
                 div.appendChild(content);
 
-                div.querySelector('.delete-btn').addEventListener('click', () => deleteNote(note.timestamp));
+                const delBtn = div.querySelector('.delete-btn');
+                if (delBtn) delBtn.addEventListener('click', () => deleteNote(note.timestamp));
                 return div;
             }
 
             // Salva una nuova nota
-            noteForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const text = document.getElementById('noteText').value;
-                const url = document.getElementById('noteUrl').value;
-                const subcategory = document.getElementById('subcategory').value;
-                const timestamp = Date.now();
+            if (noteForm) {
+                noteForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const text = document.getElementById('noteText').value;
+                    const url = document.getElementById('noteUrl').value;
+                    const subcategory = document.getElementById('subcategory').value;
+                    const timestamp = Date.now();
 
-                const newNote = {
-                    category: 'Mastering',
-                    subcategory,
-                    text,
-                    url,
-                    timestamp
-                };
+                    const newNote = {
+                        category: 'Mastering',
+                        subcategory,
+                        text,
+                        url,
+                        timestamp
+                    };
 
-                const notes = JSON.parse(localStorage.getItem('webNotes')) || [];
-                notes.push(newNote);
-                localStorage.setItem('webNotes', JSON.stringify(notes));
+                    const notes = JSON.parse(localStorage.getItem('webNotes')) || [];
+                    notes.push(newNote);
+                    localStorage.setItem('webNotes', JSON.stringify(notes));
 
-                noteForm.reset();
-                loadNotes(currentCategory);
-            });
+                    noteForm.reset();
+                    loadNotes(currentCategory);
+                });
+            }
 
             // Elimina una nota
             function deleteNote(timestamp) {
@@ -504,4 +521,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
